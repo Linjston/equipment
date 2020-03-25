@@ -1,0 +1,125 @@
+<template>
+    <div id="login" class="login">
+        <div class="login-left">
+            <div class="login-left-content">
+                <div>欢迎登录</div>
+                <div>设 备 管 理 系 统</div>
+            </div>
+        </div>
+        <div class="login-container">           
+            <el-form :model="ruleForm2" :rules="rules2"
+            status-icon
+            ref="ruleForm2" 
+            label-position="left" 
+            label-width="0px" 
+            class="demo-ruleForm login-page">
+                <h3 class="title">系统登录</h3>
+                <el-form-item prop="username">
+                    <el-input type="text" 
+                        v-model="ruleForm2.username" 
+                        auto-complete="off" 
+                        placeholder="用户名"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input type="password" 
+                            v-model="ruleForm2.password" 
+                            auto-complete="off" 
+                            placeholder="密码"
+                    ></el-input>
+                </el-form-item>
+                    <el-checkbox 
+                        v-model="checked"
+                        class="rememberme"
+                    >记住密码</el-checkbox>
+                <el-form-item style="width:100%;">
+                    <el-button type="primary" style="width:100%;" @click="handleSubmit" :loading="logining">登录</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name:'login',
+    data(){
+        return{
+            logining: false,
+            ruleForm2: {
+                username: 'admin',
+                password: '123456',
+            },
+            rules2: {
+                username: [{required: true, message: 'please enter your account', trigger: 'blur'}],
+                password: [{required: true, message: 'enter your password', trigger: 'blur'}]
+            },
+            checked: false
+        }
+    },
+    methods:{
+        handleSubmit(event){
+            this.$refs.ruleForm2.validate((valid) => {
+                if(valid){
+                    this.logining = true;
+                    if(this.ruleForm2.username === 'admin' && 
+                       this.ruleForm2.password === '123456'){
+                           this.logining = false;
+                           sessionStorage.setItem('user', this.ruleForm2.username);
+                           this.$router.push({path: '/'});
+                    }else{
+                        this.logining = false;
+                        this.$alert('username or password wrong!', 'info', {
+                            confirmButtonText: 'ok'
+                        })
+                    }
+                }else{
+                    console.log('error submit!');
+                    return false;
+                }
+            })
+        },
+        handleRegister(event){
+
+        }
+
+    }
+}
+</script>
+
+<style  scoped>
+    .login {
+        display: flex;
+        width:80%;
+        margin: 100px 10% 0px 10%;
+        
+    }
+    .login-left {
+        flex:1;
+        background-color:#409EFF;   
+        opacity:0.7;  
+        text-align: center;
+    }
+    .login-left-content {
+        
+    }
+    .login-container {
+       flex:1;
+       border:1px solid #409EFF;
+       border-left-color: transparent;
+    }
+    .login-page {
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        margin:  100px auto;
+        width: 350px;
+        padding: 35px 35px 15px;
+        background: #fff;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 0 25px #cac6c6;
+    }
+    label.el-checkbox.rememberme {
+        margin: 0px 0px 15px;
+        text-align: left;
+    }
+</style>
